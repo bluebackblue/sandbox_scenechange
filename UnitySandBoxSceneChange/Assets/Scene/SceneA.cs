@@ -8,6 +8,11 @@ namespace Scene
 	*/
 	public sealed class SceneA : BlueBack.Scene.Scene_Base
 	{
+		/** scene
+		*/
+		private string scene_name;
+		private int scene_index;
+
 		/** time
 		*/
 		private float time;
@@ -19,15 +24,27 @@ namespace Scene
 
 		/** constructor
 		*/
-		public SceneA()
+		public SceneA(string a_scene_name,int a_scene_index)
 		{
+			this.scene_name = a_scene_name;
+			this.scene_index = a_scene_index;
 		}
 
-		/** [BlueBack.Scene.Scene_Base]シーン名。
+		/** [BlueBack.Scene.Scene_Base]ユニティーシーン名。取得。
 		*/
-		public string GetSceneName()
+		public string GetUnitySceneName()
 		{
-			return Config.SceneA.Name;
+			return this.scene_name;
+		}
+
+		/** [BlueBack.Scene.Scene_Base]シーンインデックス。取得。
+
+			任意の値。
+
+		*/
+		public int GetSceneIndex()
+		{
+			return this.scene_index;
 		}
 
 		/** [BlueBack.Scene.Scene_Base]シーン開始。

@@ -8,17 +8,34 @@ namespace Scene
 	*/
 	public sealed class Boot : BlueBack.Scene.Scene_Base
 	{
+		/** scene
+		*/
+		private string scene_name;
+		private int scene_index;
+
 		/** constructor
 		*/
-		public Boot()
+		public Boot(string a_scene_name,int a_scene_index)
 		{
+			this.scene_name = a_scene_name;
+			this.scene_index = a_scene_index;
 		}
 
-		/** [BlueBack.Scene.Scene_Base]シーン名。
+		/** [BlueBack.Scene.Scene_Base]ユニティーシーン名。取得。
 		*/
-		public string GetSceneName()
+		public string GetUnitySceneName()
 		{
-			return null;
+			return this.scene_name;
+		}
+
+		/** [BlueBack.Scene.Scene_Base]シーンインデックス。取得。
+
+			任意の値。
+
+		*/
+		public int GetSceneIndex()
+		{
+			return this.scene_index;
 		}
 
 		/** [BlueBack.Scene.Scene_Base]シーン開始。
@@ -74,8 +91,8 @@ namespace Scene
 			t_engine.scene_list = new BlueBack.Scene.Scene_Base[Config.SceneMax];
 			for(int ii=0;ii<Config.SceneMax;ii++){
 				switch(ii){
-				case Config.SceneA.Index:		t_engine.scene_list[ii] = new SceneA();		break;
-				case Config.SceneB.Index:		t_engine.scene_list[ii] = new SceneB();		break;
+				case Config.SceneA.Index:		t_engine.scene_list[ii] = new SceneA(Config.SceneA.Name,ii);		break;
+				case Config.SceneB.Index:		t_engine.scene_list[ii] = new SceneB(Config.SceneB.Name,ii);		break;
 				default:
 					{
 						#if(UNITY_EDITOR)

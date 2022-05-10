@@ -21,7 +21,7 @@ namespace Scene
 			Boot_MonoBehaviour t_monobehaviour = t_gameobject.AddComponent<Boot_MonoBehaviour>();
 			UnityEngine.GameObject.DontDestroyOnLoad(t_gameobject);
 			Engine.Engine.CreateInstance(t_monobehaviour);
-			t_monobehaviour.StartCoroutine(new Engine.SceneExecute().Boot(new Boot()));
+			t_monobehaviour.StartCoroutine(new Engine.SceneExecute().Boot(new Boot(null,-1)));
 		}
 
 		/** OnDestroy
