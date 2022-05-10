@@ -11,6 +11,7 @@ namespace Scene
 		/** time
 		*/
 		private float time;
+		private float time_max;
 
 		/** fadein
 		*/
@@ -26,7 +27,7 @@ namespace Scene
 		*/
 		public string GetSceneName()
 		{
-			return "SceneA";
+			return Config.SceneA.Name;
 		}
 
 		/** [BlueBack.Scene.Scene_Base]シーン開始。
@@ -40,8 +41,9 @@ namespace Scene
 
 			//time
 			this.time = UnityEngine.Time.realtimeSinceStartup;
+			this.time_max = 4.0f;
 
-			//fadein
+			//フェードイン。
 			this.fadein_flag = true;
 			t_engine.fade.SceneChangeFadeInStart();
 		}
@@ -68,9 +70,9 @@ namespace Scene
 
 			if(a_phase == BlueBack.Scene.PhaseType.Running){
 				float t_delta = UnityEngine.Time.realtimeSinceStartup - this.time;
-				if((t_delta >= 4.0f)&&(this.fadein_flag == false)){
+				if((t_delta >= this.time_max)&&(this.fadein_flag == false)){
 					t_engine.scene.SetNextScene(
-						t_engine.scene_list[SceneIndex.SceneB],
+						t_engine.scene_list[Config.SceneB.Index],
 						new BlueBack.Scene.ChangeAction_Item_Base[]{
 							//シーンロードリクエスト。
 							BlueBack.Scene.ChangeAction_SingleLoaRequestNextUnityScene.Create(false),
@@ -80,6 +82,7 @@ namespace Scene
 					);
 				}
 			}else{
+				//フェードアウト。
 				t_engine.fade.SceneChangeFadeOutUpdate();
 			}
 		}

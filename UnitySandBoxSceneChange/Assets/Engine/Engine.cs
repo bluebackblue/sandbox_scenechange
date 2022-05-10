@@ -25,8 +25,10 @@ namespace Engine
 		}
 		public static void DeleteInstance()
 		{
-			Engine.instance.Dispose();
-			Engine.instance = null;
+			if(Engine.instance != null){
+				Engine.instance.Dispose();
+				Engine.instance = null;
+			}
 		}
 
 		/** initialize

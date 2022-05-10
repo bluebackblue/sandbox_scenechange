@@ -71,11 +71,11 @@ namespace Scene
 			yield return new Engine.FadeExecute().Boot();
 
 			//シーン。
-			t_engine.scene_list = new BlueBack.Scene.Scene_Base[SceneIndex.Max];
-			for(int ii=0;ii<SceneIndex.Max;ii++){
+			t_engine.scene_list = new BlueBack.Scene.Scene_Base[Config.SceneMax];
+			for(int ii=0;ii<Config.SceneMax;ii++){
 				switch(ii){
-				case SceneIndex.SceneA:		t_engine.scene_list[ii] = new SceneA();		break;
-				case SceneIndex.SceneB:		t_engine.scene_list[ii] = new SceneB();		break;
+				case Config.SceneA.Index:		t_engine.scene_list[ii] = new SceneA();		break;
+				case Config.SceneB.Index:		t_engine.scene_list[ii] = new SceneB();		break;
 				default:
 					{
 						#if(UNITY_EDITOR)
@@ -92,7 +92,7 @@ namespace Scene
 
 			//SetNextScene
 			t_engine.scene.SetNextScene(
-				t_engine.scene_list[SceneIndex.SceneA],
+				t_engine.scene_list[Config.SceneA.Index],
 				new BlueBack.Scene.ChangeAction_Item_Base[]{
 					BlueBack.Scene.ChangeAction_SingleLoaRequestNextUnityScene.Create(true),
 					BlueBack.Scene.ChangeAction_WaitActivationNextUnityScene.Create(5),

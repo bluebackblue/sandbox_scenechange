@@ -8,9 +8,12 @@ namespace FadeEngine
 	*/
 	public sealed class FadeEngine : System.IDisposable
 	{
-		/** mesh
+		/** cell
 		*/
-		private UnityEngine.Mesh mesh;
+		private UnityEngine.Mesh cell_mesh;
+		private	int cell_w = 16;
+		private int cell_h = 9;
+		private UnityEngine.Vector2 cell_size;
 
 		/** layerindex
 		*/
@@ -48,39 +51,37 @@ namespace FadeEngine
 		*/
 		private float scenechagnge_fadein_time;
 
-		/** cell_size
-		*/
-		private	const int CELL_W = 16;
-		private const int CELL_H = 9;
-		private UnityEngine.Vector2 cell_size;
-
 		/** constructor
 		*/
 		public FadeEngine(in InitParam a_initparam)
 		{
-			//mesh
+			//cell
 			{
-				this.mesh = new UnityEngine.Mesh();
-				this.mesh.vertices = new UnityEngine.Vector3[]{
+				this.cell_mesh = new UnityEngine.Mesh();
+				this.cell_mesh.vertices = new UnityEngine.Vector3[]{
 					new UnityEngine.Vector3(0,0,0),
 					new UnityEngine.Vector3(1,0,0),
 					new UnityEngine.Vector3(1,1,0),
 					new UnityEngine.Vector3(0,1,0),
 				};
-				this.mesh.uv = new UnityEngine.Vector2[]{
+				this.cell_mesh.uv = new UnityEngine.Vector2[]{
 					new UnityEngine.Vector3(0,0),
 					new UnityEngine.Vector3(1,0),
 					new UnityEngine.Vector3(1,1),
 					new UnityEngine.Vector3(0,1),
 				};
-				this.mesh.triangles = new int[]{0,1,2,2,3,0};
-				this.mesh.RecalculateNormals();
-				this.mesh.RecalculateBounds();
-				this.mesh.RecalculateTangents();
+				this.cell_mesh.triangles = new int[]{0,1,2,2,3,0};
+				this.cell_mesh.RecalculateNormals();
+				this.cell_mesh.RecalculateBounds();
+				this.cell_mesh.RecalculateTangents();
+
+				this.cell_w = a_initparam.cell_w;
+				this.cell_h = a_initparam.cell_h;
+				this.cell_size = new UnityEngine.Vector2(1.0f / this.cell_w,1.0f / this.cell_h);
 			}
 
 			//layerindex
-			this.layerindex = 10;
+			this.layerindex = a_initparam.layerindex;
 
 			//camera
 			{
@@ -89,7 +90,7 @@ namespace FadeEngine
 				this.camera_raw = this.camera_gameobject.AddComponent<UnityEngine.Camera>();
 				this.camera_raw.clearFlags = UnityEngine.CameraClearFlags.Nothing;
 				this.camera_raw.orthographic = true;
-				this.camera_raw.depth = 10.0f;
+				this.camera_raw.depth = a_initparam.cameradepth;
 				this.camera_raw.cullingMask = 1 << this.layerindex;
 				this.camera_gameobject.transform.position = new UnityEngine.Vector3(0.0f,0.0f,-5.0f);
 			}
@@ -102,15 +103,10 @@ namespace FadeEngine
 				this.canvas_gameobject.SetActive(false);
 			}
 
-			//cell_size
-			{
-				this.cell_size = new UnityEngine.Vector2(1.0f / CELL_W,1.0f / CELL_H);
-			}
-
 			//drawinstance
 			{
-				this.drawinstance = new BlueBack.DrwaInstance.DrawInstance(this.mesh);
-				this.drawinstance_buffer = new BlueBack.DrwaInstance.Buffer<ShaderParam_TypeA_Status>(CELL_W * CELL_H,32);
+				this.drawinstance = new BlueBack.DrwaInstance.DrawInstance(this.cell_mesh);
+				this.drawinstance_buffer = new BlueBack.DrwaInstance.Buffer<ShaderParam_TypeA_Status>(this.cell_w * this.cell_h,32);
 			}
 
 			//fade
@@ -120,7 +116,7 @@ namespace FadeEngine
 				//custom_matrix
 				UnityEngine.Matrix4x4 t_matrix;
 				{
-					float t_scale = 1.0f / CELL_H;
+					float t_scale = 1.0f / this.cell_h;
 					float t_aspect = (float)UnityEngine.Screen.height / UnityEngine.Screen.width;
 					t_matrix = new UnityEngine.Matrix4x4(
 						new UnityEngine.Vector4(t_aspect * t_scale * 2,0.0f,0.0f,0.0f),
@@ -158,9 +154,9 @@ namespace FadeEngine
 		*/
 		public void Dispose()
 		{
-			if(this.mesh != null){
-				this.mesh.Clear();
-				this.mesh = null;
+			if(this.cell_mesh != null){
+				this.cell_mesh.Clear();
+				this.cell_mesh = null;
 			}
 
 			if(this.camera_gameobject != null){
@@ -191,6 +187,11 @@ namespace FadeEngine
 			if(this.fade_material_propertyblock != null){
 				this.fade_material_propertyblock.Clear();
 				this.fade_material_propertyblock = null;
+			}
+
+			if(this.screenshot_texture != null){
+				UnityEngine.Object.DestroyImmediate(this.screenshot_texture);
+				this.screenshot_texture = null;
 			}
 		}
 
@@ -255,13 +256,13 @@ namespace FadeEngine
 			if(this.screenshot_texture != null){
 				this.fade_material_propertyblock.SetFloat("move",this.fade_material_move);
 
-				int t_drawcount = CELL_W * CELL_H;
+				int t_drawcount = this.cell_w * this.cell_h;
 
 				//drawinstance_buffer
 				{
-					for(int yy=0;yy<CELL_H;yy++){
-						for(int xx=0;xx<CELL_W;xx++){
-							int t_index = yy * CELL_W + xx;
+					for(int yy=0;yy<this.cell_h;yy++){
+						for(int xx=0;xx<this.cell_w;xx++){
+							int t_index = yy * this.cell_w + xx;
 							this.drawinstance_buffer.raw[t_index] = new ShaderParam_TypeA_Status(
 								new UnityEngine.Vector2(xx,yy),
 								new UnityEngine.Vector2(xx * this.cell_size.x,yy * this.cell_size.y),
