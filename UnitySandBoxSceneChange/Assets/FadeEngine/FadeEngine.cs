@@ -145,6 +145,7 @@ namespace FadeEngine
 			//loading
 			{
 				this.loading_material = new UnityEngine.Material(a_initparam.loading_material);
+				this.canvas_gameobject.transform.Find("Loading").GetComponent<UnityEngine.UI.Text>().material = this.loading_material;
 			}
 
 			//screenshot
