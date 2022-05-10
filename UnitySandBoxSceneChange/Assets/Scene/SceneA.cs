@@ -70,7 +70,7 @@ namespace Scene
 				float t_delta = UnityEngine.Time.realtimeSinceStartup - this.time;
 				if((t_delta >= 4.0f)&&(this.fadein_flag == false)){
 					t_engine.scene.SetNextScene(
-						t_engine.scene_list[1],
+						t_engine.scene_list[SceneIndex.SceneB],
 						new BlueBack.Scene.ChangeAction_Item_Base[]{
 							//シーンロードリクエスト。
 							BlueBack.Scene.ChangeAction_SingleLoaRequestNextUnityScene.Create(false),

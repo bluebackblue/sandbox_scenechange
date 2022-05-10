@@ -102,6 +102,7 @@ namespace FadeEngine
 				this.canvas_gameobject.SetActive(false);
 			}
 
+			//cell_size
 			{
 				this.cell_size = new UnityEngine.Vector2(1.0f / CELL_W,1.0f / CELL_H);
 			}
@@ -119,7 +120,7 @@ namespace FadeEngine
 				//custom_matrix
 				UnityEngine.Matrix4x4 t_matrix;
 				{
-					float t_scale = 1.0f / 9;
+					float t_scale = 1.0f / CELL_H;
 					float t_aspect = (float)UnityEngine.Screen.height / UnityEngine.Screen.width;
 					t_matrix = new UnityEngine.Matrix4x4(
 						new UnityEngine.Vector4(t_aspect * t_scale * 2,0.0f,0.0f,0.0f),
@@ -143,7 +144,7 @@ namespace FadeEngine
 
 			//loading
 			{
-				this.loading_material = a_initparam.loading_material;
+				this.loading_material = new UnityEngine.Material(a_initparam.loading_material);
 			}
 
 			//screenshot
@@ -253,13 +254,13 @@ namespace FadeEngine
 			if(this.screenshot_texture != null){
 				this.fade_material_propertyblock.SetFloat("move",this.fade_material_move);
 
-				int t_drawcount = 16 * 9;
+				int t_drawcount = CELL_W * CELL_H;
 
 				//drawinstance_buffer
 				{
-					for(int yy=0;yy<9;yy++){
-						for(int xx=0;xx<16;xx++){
-							int t_index = yy * 16 + xx;
+					for(int yy=0;yy<CELL_H;yy++){
+						for(int xx=0;xx<CELL_W;xx++){
+							int t_index = yy * CELL_W + xx;
 							this.drawinstance_buffer.raw[t_index] = new ShaderParam_TypeA_Status(
 								new UnityEngine.Vector2(xx,yy),
 								new UnityEngine.Vector2(xx * this.cell_size.x,yy * this.cell_size.y),
